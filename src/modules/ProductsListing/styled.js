@@ -61,6 +61,14 @@ export const Button = styled.button`
 	background: #fff;
 	cursor: pointer;
 	font-size: 1rem;
+	${props => {
+		if (props.disabled) {
+			return `
+      cursor: not-allowed;
+      `;
+		}
+		return '';
+	}}
 	${props => props.styles || ''}
 `;
 

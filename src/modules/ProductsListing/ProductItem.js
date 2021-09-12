@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Modal } from '../../common/components';
 import CloseSvg from '../../common/CloseSvg';
 import SubmitReviewModal from './SubmitReviewModal';
+import { useSubmitReview } from './api';
 
 import {
 	ProductListItem,
@@ -58,6 +59,10 @@ function ProductItem(props) {
 
 	const { title, description, totalrating } = item;
 	const [showReviewModal, setShowReviewModal] = useState(false);
+
+	const { submitReview, state } = useSubmitReview();
+	console.log('🚀 ~ file: ProductItem.js ~ line 64 ~ ProductItem ~ submitReview', state);
+
 	return (
 		<ProductListItem>
 			<TopSection>
@@ -161,7 +166,15 @@ function ProductItem(props) {
 						setShowReviewModal(false);
 					}}
 				>
-					<SubmitReviewModal />
+					<SubmitReviewModal
+						item={item}
+						onSubmitReview={({ payload }) => {
+							submitReview({
+								payload,
+							});
+						}}
+						state={state}
+					/>
 				</Modal>
 			) : null}
 		</ProductListItem>

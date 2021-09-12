@@ -33,13 +33,18 @@ class Rating extends React.PureComponent {
 	}
 
 	render() {
+		const { onChangeRating } = this.props;
 		const { rating } = this.state;
 		let stars = [];
 		for (let i = 0; i < 10; i++) {
 			// console.log('i', i);
 			let klass = 'ion-ios-star-outline';
+			const extraStyle = {
+				color: '#000',
+			};
 			if (this.state.rating >= i && this.state.rating !== null) {
 				klass = 'ion-ios-star';
+				extraStyle.color = '#FFCD69';
 			}
 			stars.push(
 				<i
@@ -51,10 +56,16 @@ class Rating extends React.PureComponent {
 						overflow: 'hidden',
 						direction: i % 2 === 0 ? 'ltr' : 'rtl',
 						marginRight: i % 2 === 0 ? '0px' : '5px',
+						...extraStyle,
 					}}
 					className={klass}
 					onMouseOver={() => this.handleMouseover(i)}
-					onClick={() => this.rate(i)}
+					onClick={() => {
+						this.rate(i);
+						if (onChangeRating) {
+							onChangeRating(i);
+						}
+					}}
 					onMouseOut={() => this.handleMouseout()}
 				/>,
 			);
