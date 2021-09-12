@@ -50,7 +50,7 @@ export const RightSection = styled.div`
 		justify-content: space-between;
 	}
 `;
-export const ButtonAddReview = styled.button`
+export const Button = styled.button`
 	height: 40px;
 	color: #797874;
 	border: 1px solid #cccccc;
@@ -61,6 +61,7 @@ export const ButtonAddReview = styled.button`
 	background: #fff;
 	cursor: pointer;
 	font-size: 1rem;
+	${props => props.styles || ''}
 `;
 
 export const ProductListContainer = styled.div`

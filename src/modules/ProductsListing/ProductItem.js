@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import Rating from './Rating';
 import PropTypes from 'prop-types';
+import { Modal } from '../../common/components';
 import CloseSvg from '../../common/CloseSvg';
+import SubmitReviewModal from './SubmitReviewModal';
 
 import {
 	ProductListItem,
@@ -13,7 +15,7 @@ import {
 	LeftSection,
 	RightSection,
 	SeeMoreReview,
-	ButtonAddReview,
+	Button,
 } from './styled';
 
 export const TopSection = styled.div``;
@@ -55,6 +57,7 @@ function ProductItem(props) {
 	const [openAllReviews, setOpenAllReviews] = useState(false);
 
 	const { title, description, totalrating } = item;
+	const [showReviewModal, setShowReviewModal] = useState(false);
 	return (
 		<ProductListItem>
 			<TopSection>
@@ -85,7 +88,13 @@ function ProductItem(props) {
 								See all reviews
 							</SeeMoreReview>
 						) : null}
-						<ButtonAddReview>Add review</ButtonAddReview>
+						<Button
+							onClick={() => {
+								setShowReviewModal(true);
+							}}
+						>
+							Add review
+						</Button>
 					</RightSection>
 				</RatingLayer>
 			</TopSection>
@@ -131,6 +140,29 @@ function ProductItem(props) {
 						<Comments>The books is great</Comments>
 					</RatingsAndReviewSection>
 				</SecondSection>
+			) : null}
+			{showReviewModal ? (
+				<Modal
+					bodyStyles={css`
+						min-width: 600px;
+
+						@media (max-width: 768px) {
+							min-width: 100%;
+							top: 0;
+							bottom: 0;
+							padding-top: 120px;
+						}
+					`}
+					show={showReviewModal}
+					setShow={setShowReviewModal}
+					showCloseAct
+					closePlacement="inside"
+					closeModal={() => {
+						setShowReviewModal(false);
+					}}
+				>
+					<SubmitReviewModal />
+				</Modal>
 			) : null}
 		</ProductListItem>
 	);
