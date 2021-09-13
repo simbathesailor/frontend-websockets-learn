@@ -68,8 +68,6 @@ function ProductItem(props) {
 	const { submitReview, state } = useSubmitReview();
 	const parsedRating = parseFloat(totalRating || 0);
 
-	// console.log('🚀 ~ file: ProductItem.js ~ line 64 ~ ProductItem ~ submitReview', state);
-
 	const reviews = item.reviews;
 
 	return (

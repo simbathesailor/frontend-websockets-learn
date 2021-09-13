@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { notify } from '../../common/components';
 import { getCookie, setCookie } from '../../common/cookie';
 import { useAPIState } from '../../common/hooks';
 import { fetchWrapper } from './../../common';
+import { WebSocketContext } from '../../common/Contexts/WebSocketContext';
 
 // https://react-hot-toast.com/docs
 const getProductsURL = `${process.env.REACT_APP_BASE_URL}/v1/product/all`;
@@ -37,6 +38,8 @@ export function useProducts() {
 	} = useAPIState({
 		data: null,
 	});
+
+	const { updates } = useContext(WebSocketContext);
 
 	async function getProducts() {
 		setLoadingProducts();
@@ -73,6 +76,12 @@ export function useProducts() {
 		}
 	}
 
+	useEffect(() => {
+		if (updates?.freshProductListTicker) {
+			getProducts();
+		}
+	}, [updates?.freshProductListTicker]);
+
 	return {
 		getProducts,
 		state,
@@ -95,6 +104,7 @@ export function useSubmitReview() {
 		data: null,
 	});
 
+	const { socket } = useContext(WebSocketContext);
 	async function submitReview({ payload, callback } = {}) {
 		setLoadingSubmitReview();
 
@@ -107,6 +117,18 @@ export function useSubmitReview() {
 						message: 'Successfully saved the review',
 						type: 'success',
 					});
+
+					/**
+					 * Socket update
+					 *
+					 */
+
+					socket.send(
+						JSON.stringify({
+							type: 'UPDATE_PRODUCT_LISTING',
+						}),
+					);
+
 					if (callback) {
 						callback();
 					}

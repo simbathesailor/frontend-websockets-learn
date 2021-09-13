@@ -1,13 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import ProductListing from './modules/ProductsListing';
 import logo from './logo.svg';
 import { getCookie, setCookie } from './common/cookie';
 import { useToken } from './api';
+import { WebSocketContextProvider } from './common/Contexts/WebSocketContext';
 import './App.css';
 
 function App() {
 	const { getToken, state } = useToken();
+	const [socket, setSocket] = useState(null);
+
+	const [updates, setUpdates] = useState({
+		freshProductListTicker: 0,
+	});
+
 	// console.log('🚀 ~ file: App.js ~ line 10 ~ App ~ state', state);
 	useEffect(() => {
 		const authCookie = getCookie('_auth');
@@ -19,22 +26,46 @@ function App() {
 		// if(!authCookie) {
 		//   setCookie("__auth")
 		// }
-		// const socket = new WebSocket('ws://localhost:8002/live-updates');
 
-		//   // Connection opened
-		//   socket.addEventListener('open', function (event) {
-		//       socket.send('Hello Server!');
-		//   });
+		const socketNew = new WebSocket(process.env.REACT_APP_WS_CONNECTION);
 
-		//   // Listen for messages
-		//   socket.addEventListener('message', function (event) {
-		//       console.log("🚀 ~ file: index.html ~ line 22 ~ event", event)
-		//       console.log('Message from server ', event.data);
-		//   });
+		setSocket(socketNew);
 
-		// return () => {
+		// Connection opened
 
-		// }
+		socketNew.addEventListener('open', function (event) {
+			socketNew.send('Hello Server!');
+		});
+
+		// Listen for messages
+		socketNew.addEventListener('message', function (event) {
+			console.log('Message from server ', event.data);
+
+			try {
+				const parseEventData = JSON.parse(event.data);
+
+				const type = parseEventData?.type;
+
+				switch (type) {
+					case 'UPDATE_PRODUCT_LISTING':
+						{
+							setUpdates(c => {
+								return {
+									...c,
+									freshProductListTicker: c.freshProductListTicker + 1,
+								};
+							});
+						}
+						break;
+					default:
+						return;
+				}
+			} catch (e) {}
+
+			// {"type":"UPDATE_PRODUCT_LISTING"}
+		});
+
+		return () => {};
 		//getCookie()
 	}, []);
 
@@ -44,10 +75,18 @@ function App() {
 		return null;
 	}
 	return (
-		<div className="App">
-			<ProductListing />
-			<Toaster />
-		</div>
+		<WebSocketContextProvider
+			value={{
+				setSocket,
+				socket,
+				updates,
+			}}
+		>
+			<div className="App">
+				<ProductListing />
+				<Toaster />
+			</div>
+		</WebSocketContextProvider>
 	);
 }
 

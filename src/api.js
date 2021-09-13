@@ -41,7 +41,6 @@ export function useToken() {
 
 		try {
 			const res = await login({ payload });
-			console.log('🚀 ~ file: api.js ~ line 44 ~ getToken ~ res', res);
 			if (res.ok) {
 				setCookie('_auth', res.data.token);
 				setSuccessGetToken(res.data);
