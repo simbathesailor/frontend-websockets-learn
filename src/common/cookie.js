@@ -15,7 +15,8 @@ export function getCookie(cname) {
 }
 
 export function deleteCookie(cname) {
-	const domain = process.env.REACT_APP_ROOT_DOMAIN;
+	//	const domain = process.env.REACT_APP_ROOT_DOMAIN;
+	const domain = window.location.hostname;
 	document.cookie = `${cname}=;expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${domain}; path=/;`;
 }
 
@@ -23,7 +24,8 @@ export function setCookie(cname, cvalue, extime) {
 	const cvalueEncoded = encodeURIComponent(cvalue);
 	let expires = '';
 
-	const domain = process.env.REACT_APP_ROOT_DOMAIN;
+	// const domain = process.env.REACT_APP_ROOT_DOMAIN;
+	const domain = window.location.hostname;
 	if (extime) {
 		const d = new Date();
 		d.setTime(d.getTime() + extime * 1000);
