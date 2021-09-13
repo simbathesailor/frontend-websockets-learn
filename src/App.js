@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Toaster } from 'react-hot-toast';
 import ProductListing from './modules/ProductsListing';
 import logo from './logo.svg';
@@ -10,6 +10,9 @@ import './App.css';
 function App() {
 	const { getToken, state } = useToken();
 	const [socket, setSocket] = useState(null);
+	// const [pingTimeout, setPingTimeout] = useState(null)
+
+	const pingTimeoutRef = useRef(null);
 
 	const [updates, setUpdates] = useState({
 		freshProductListTicker: 0,
@@ -36,6 +39,27 @@ function App() {
 		socketNew.addEventListener('open', function (event) {
 			socketNew.send('Hello Server!');
 		});
+
+		// debugger;
+		function heartbeat() {
+			clearTimeout(pingTimeoutRef.current);
+
+			// Use `WebSocket#terminate()`, which immediately destroys the connection,
+			// instead of `WebSocket#close()`, which waits for the close timer.
+			// Delay should be equal to the interval at which your server
+			// sends out pings plus a conservative assumption of the latency.
+
+			pingTimeoutRef.current = setTimeout(() => {
+				socketNew.send('Hello Server! PING');
+			}, 30000 + 1000);
+		}
+
+		socketNew.onopen = heartbeat;
+		socketNew.onping = heartbeat;
+
+		socketNew.onclose = function clear() {
+			clearTimeout(pingTimeoutRef.current);
+		};
 
 		// Listen for messages
 		socketNew.addEventListener('message', function (event) {
