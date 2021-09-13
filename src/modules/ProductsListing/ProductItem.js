@@ -98,15 +98,14 @@ function ProductItem(props) {
 						) : null}
 					</LeftSection>
 					<RightSection>
-						{!openAllReviews && reviews?.length ? (
-							<SeeMoreReview
-								onClick={() => {
-									setOpenAllReviews(true);
-								}}
-							>
-								See all reviews
-							</SeeMoreReview>
-						) : null}
+						<SeeMoreReview
+							onClick={() => {
+								setOpenAllReviews(true);
+							}}
+						>
+							{!openAllReviews && reviews?.length ? 'See all reviews' : ''}
+						</SeeMoreReview>
+
 						<Button
 							onClick={() => {
 								setShowReviewModal(true);
