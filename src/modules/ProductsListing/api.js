@@ -1,5 +1,6 @@
 import React from 'react';
 import { notify } from '../../common/components';
+import { getCookie, setCookie } from '../../common/cookie';
 import { useAPIState } from '../../common/hooks';
 import { fetchWrapper } from './../../common';
 
@@ -12,7 +13,6 @@ export async function getProductsAPI() {
 }
 
 export async function submitReviewAPI({ payload } = {}) {
-	console.log('🚀 ~ file: api.js ~ line 15 ~ submitReviewAPI ~ payload', payload);
 	return fetchWrapper({
 		url: submitReviewURL,
 		options: {
@@ -44,7 +44,27 @@ export function useProducts() {
 		try {
 			const res = await getProductsAPI();
 			if (res.ok) {
-				setSuccessProducts(res.data);
+				const authCookie = getCookie('_auth');
+				const products = res.data?.products;
+
+				const productsParsed = products.map(product => {
+					const { reviews } = product;
+
+					const productParsed = {
+						...product,
+						alreadyReviewed: false,
+					};
+					reviews.forEach(review => {
+						if (review.user_id === authCookie) {
+							productParsed.alreadyReviewed = true;
+							productParsed.ownReviewInfo = review;
+						}
+					});
+					return productParsed;
+				});
+				setSuccessProducts({
+					products: productsParsed,
+				});
 			} else {
 				setFailureProducts();
 			}
@@ -75,17 +95,27 @@ export function useSubmitReview() {
 		data: null,
 	});
 
-	async function submitReview({ payload } = {}) {
+	async function submitReview({ payload, callback } = {}) {
 		setLoadingSubmitReview();
 
 		try {
 			const res = await submitReviewAPI({ payload });
 			if (res.ok) {
 				setSuccessSubmitReviews(res.data);
-				notify({
-					message: 'Successfully saved the review',
-					type: 'success',
-				});
+				if (res.success) {
+					notify({
+						message: 'Successfully saved the review',
+						type: 'success',
+					});
+					if (callback) {
+						callback();
+					}
+				} else {
+					notify({
+						message: 'Failed to save the review',
+						type: 'error',
+					});
+				}
 			} else {
 				setFailureSubmitReview();
 			}

@@ -43,7 +43,7 @@ export const LeftSection = styled.div`
 `;
 export const RightSection = styled.div`
 	display: flex;
-	align-items: flex-end;
+	align-items: center;
 	@media (max-width: 768px) {
 		margin-top: 20px;
 		width: 100%;

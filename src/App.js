@@ -8,10 +8,10 @@ import './App.css';
 
 function App() {
 	const { getToken, state } = useToken();
-	console.log('🚀 ~ file: App.js ~ line 10 ~ App ~ state', state);
+	// console.log('🚀 ~ file: App.js ~ line 10 ~ App ~ state', state);
 	useEffect(() => {
 		const authCookie = getCookie('_auth');
-		console.log('🚀 ~ file: App.js ~ line 16 ~ useEffect ~ authCookie', authCookie);
+		// console.log('🚀 ~ file: App.js ~ line 16 ~ useEffect ~ authCookie', authCookie);
 
 		if (!authCookie) {
 			getToken();

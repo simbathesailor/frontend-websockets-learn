@@ -39,13 +39,22 @@ function resolveRatingForInternalComponent(val) {
 
 	//if(steps)
 }
-function SubmitReviewModal(props) {
-	const { onSubmitReview, item, state } = props;
 
-	const [rating, setRating] = useState(0);
-	console.log('🚀 ~ file: SubmitReviewModal.js ~ line 46 ~ SubmitReviewModal ~ rating', rating);
-	const [comment, setComment] = useState('');
-	console.log('🚀 ~ file: SubmitReviewModal.js ~ line 47 ~ SubmitReviewModal ~ comment', comment);
+function getRatingForComponent(value) {
+	if (parseFloat()) return parseFloat(value) ? parseFloat(value) * 2 - 1 : 0;
+}
+function SubmitReviewModal(props) {
+	const { onSubmitReview, item, state, reviewInfo } = props;
+	// const { total_rating: totalRating } = item
+
+	const [rating, setRating] = useState(() => {
+		const ratingOwn = parseFloat(reviewInfo?.rating || 0);
+		return ratingOwn;
+	});
+
+	const [comment, setComment] = useState(() => {
+		return reviewInfo?.comment || '';
+	});
 
 	const { isFetching } = state;
 
@@ -55,10 +64,11 @@ function SubmitReviewModal(props) {
 			<StarRatingSection>
 				<Label>Rating</Label>
 				<Rating
-					onChangeRating={i => {
-						setRating(i * 0.5 + 0.5);
+					readonly={false}
+					onClickStar={({ rating }) => {
+						setRating(rating);
 					}}
-					rating={parseFloat(resolveRatingForInternalComponent(rating))}
+					rating={rating}
 				/>
 			</StarRatingSection>
 			<ReviewSection>
@@ -82,7 +92,7 @@ function SubmitReviewModal(props) {
 						onSubmitReview({
 							payload: {
 								'product_id': item.id,
-								rating: `${rating}`,
+								rating,
 								'review_comment': comment,
 							},
 						});

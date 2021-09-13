@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { getCookie, setCookie } from '../../common/cookie';
 import styled, { css } from 'styled-components';
 import Rating from './Rating';
 import PropTypes from 'prop-types';
@@ -31,7 +32,7 @@ export const SecondSection = styled.div`
 `;
 export const ReviewLabelHead = styled.h2``;
 export const RatingsAndReviewSection = styled.div`
-	margin-top: 20px;
+	margin-top: 40px;
 `;
 export const RatingsSection = styled.div`
 	display: flex;
@@ -53,15 +54,23 @@ export const CloseSvgContainer = styled.div`
 	right: 10px;
 	cursor: pointer;
 `;
+
+export const NoReview = styled.p``;
 function ProductItem(props) {
-	const { item } = props;
+	const { item, getProducts } = props;
+
+	// console.log('🚀 ~ file: ProductItem.js ~ line 58 ~ ProductItem ~ item', item);
 	const [openAllReviews, setOpenAllReviews] = useState(false);
 
-	const { title, description, totalrating } = item;
+	const { title, description, total_rating: totalRating, alreadyReviewed, ownReviewInfo } = item;
 	const [showReviewModal, setShowReviewModal] = useState(false);
 
 	const { submitReview, state } = useSubmitReview();
-	console.log('🚀 ~ file: ProductItem.js ~ line 64 ~ ProductItem ~ submitReview', state);
+	const parsedRating = parseFloat(totalRating || 0);
+
+	// console.log('🚀 ~ file: ProductItem.js ~ line 64 ~ ProductItem ~ submitReview', state);
+
+	const reviews = item.reviews;
 
 	return (
 		<ProductListItem>
@@ -70,21 +79,28 @@ function ProductItem(props) {
 				<SubHeaderSection>{description}</SubHeaderSection>
 				<RatingLayer>
 					<LeftSection>
-						<RatingValue>{totalrating}</RatingValue>
-						<Rating
-							rating={3}
-							stylesFieldset={css`
-								& > label:before {
-									font-size: 1.25rem;
-								}
-								& .half:before {
-									font-size: 1.25rem;
-								}
-							`}
-						/>
+						{parsedRating ? (
+							<RatingValue>{parsedRating}</RatingValue>
+						) : (
+							<NoReview>No reviews yet</NoReview>
+						)}
+						{parseFloat(parsedRating) ? (
+							<Rating
+								readonly
+								rating={parsedRating || 0}
+								stylesFieldset={css`
+									& > label:before {
+										font-size: 1.25rem;
+									}
+									& .half:before {
+										font-size: 1.25rem;
+									}
+								`}
+							/>
+						) : null}
 					</LeftSection>
 					<RightSection>
-						{!openAllReviews ? (
+						{!openAllReviews && reviews?.length ? (
 							<SeeMoreReview
 								onClick={() => {
 									setOpenAllReviews(true);
@@ -98,7 +114,7 @@ function ProductItem(props) {
 								setShowReviewModal(true);
 							}}
 						>
-							Add review
+							{alreadyReviewed ? 'Edit review' : 'Add review'}
 						</Button>
 					</RightSection>
 				</RatingLayer>
@@ -115,35 +131,36 @@ function ProductItem(props) {
 					>
 						<CloseSvg />
 					</CloseSvgContainer>
-					{/* <Close
-						onClick={() => {
-							setOpenAllReviews(false);
-						}}
-					>
-						CLOSE
-					</Close> */}
-					<RatingsAndReviewSection>
-						<RatingsSection>
-							<RatingValue
-								styles={css`
-									font-size: 1.25rem;
-								`}
-							>
-								3.8
-							</RatingValue>
-							<Rating
-								stylesFieldset={css`
-									& > label:before {
-										font-size: 1.25rem;
-									}
-									& .half:before {
-										font-size: 1.25rem;
-									}
-								`}
-							/>
-						</RatingsSection>
-						<Comments>The books is great</Comments>
-					</RatingsAndReviewSection>
+
+					{(reviews || []).map(review => {
+						const { id, comment, rating } = review;
+						const parsedRatingIndividualRating = parseFloat(rating);
+						return (
+							<RatingsAndReviewSection key={id}>
+								<RatingsSection>
+									<RatingValue
+										styles={css`
+											font-size: 1.25rem;
+										`}
+									>
+										{parsedRatingIndividualRating}
+									</RatingValue>
+									<Rating
+										rating={parsedRatingIndividualRating}
+										stylesFieldset={css`
+											& > label:before {
+												font-size: 1.25rem;
+											}
+											& .half:before {
+												font-size: 1.25rem;
+											}
+										`}
+									/>
+								</RatingsSection>
+								<Comments>{comment}</Comments>
+							</RatingsAndReviewSection>
+						);
+					})}
 				</SecondSection>
 			) : null}
 			{showReviewModal ? (
@@ -168,9 +185,13 @@ function ProductItem(props) {
 				>
 					<SubmitReviewModal
 						item={item}
+						reviewInfo={ownReviewInfo}
 						onSubmitReview={({ payload }) => {
 							submitReview({
 								payload,
+								callback: () => {
+									getProducts();
+								},
 							});
 						}}
 						state={state}

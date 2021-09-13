@@ -46,7 +46,6 @@ export const RatingValue = styled.span`
 
 function ProductListing(props) {
 	const { getProducts, state: stateProducts } = useProducts();
-	console.log('🚀 ~ file: index.js ~ line 49 ~ ProductListing ~ stateProducts', stateProducts);
 
 	useEffect(() => {
 		getProducts();
@@ -58,7 +57,9 @@ function ProductListing(props) {
 		<ProductSectionContainer>
 			<ProductListContainer>
 				{products.map(product => {
-					return <ProductItem key={product.id} item={product} />;
+					return (
+						<ProductItem key={product.id} item={product} getProducts={getProducts} />
+					);
 				})}
 			</ProductListContainer>
 		</ProductSectionContainer>
