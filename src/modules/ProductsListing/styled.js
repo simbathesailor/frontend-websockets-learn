@@ -15,7 +15,7 @@ export const ProductListItem = styled.div`
 	margin-bottom: 100px;
 `;
 export const HeaderSection = styled.h2`
-	font-size: 2.5rem;
+	font-size: 2.1rem;
 	margin-bottom: 10px;
 	text-align: left;
 `;

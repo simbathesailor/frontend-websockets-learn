@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
+import { Loader } from '../../common/components';
 import Rating from './Rating';
 import { Button } from './styled';
 
@@ -99,7 +100,7 @@ function SubmitReviewModal(props) {
 					}
 				}}
 			>
-				Submit Review
+				{isFetching ? <Loader /> : '	Submit Review'}
 			</Button>
 		</div>
 	);
