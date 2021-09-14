@@ -57,10 +57,11 @@ function ProductListing(props) {
 	}, []);
 
 	const products = stateProducts?.data?.products || [];
+	const showLoader = stateProducts?.data?.showLoader;
 
 	return (
 		<ProductSectionContainer>
-			{stateProducts?.isFetching ? <PageLoader /> : null}
+			{stateProducts?.isFetching && showLoader ? <PageLoader /> : null}
 			<ProductListContainer>
 				{products.map(product => {
 					return (

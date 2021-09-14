@@ -41,11 +41,12 @@ export function useProducts() {
 
 	const { updates } = useContext(WebSocketContext);
 
-	async function getProducts() {
+	async function getProducts({ showLoader } = { showLoader: true }) {
 		setLoadingProducts();
 
 		try {
 			const res = await getProductsAPI();
+
 			if (res.ok) {
 				const authCookie = getCookie('_auth');
 				const products = res.data?.products;
@@ -65,8 +66,10 @@ export function useProducts() {
 					});
 					return productParsed;
 				});
+
 				setSuccessProducts({
 					products: productsParsed,
+					showLoader,
 				});
 			} else {
 				setFailureProducts();
@@ -78,7 +81,9 @@ export function useProducts() {
 
 	useEffect(() => {
 		if (updates?.freshProductListTicker) {
-			getProducts();
+			getProducts({
+				showLoader: false,
+			});
 		}
 	}, [updates?.freshProductListTicker]);
 
