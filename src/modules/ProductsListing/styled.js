@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 export const ProductSectionContainer = styled.div`
-	max-width: 1024px;
-	background: red;
+	max-width: 900px;
 	padding: 20px 100px;
 	margin: 0px auto;
 	box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;

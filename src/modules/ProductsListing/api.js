@@ -115,7 +115,9 @@ export function useSubmitReview() {
 				if (res.success) {
 					notify({
 						message: 'Successfully saved the review',
-						type: 'success',
+						options: {
+							type: 'success',
+						},
 					});
 
 					/**
@@ -135,7 +137,9 @@ export function useSubmitReview() {
 				} else {
 					notify({
 						message: 'Failed to save the review',
-						type: 'error',
+						options: {
+							type: 'error',
+						},
 					});
 				}
 			} else {

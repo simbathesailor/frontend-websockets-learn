@@ -86,6 +86,8 @@ function SubmitReviewModal(props) {
 			<Button
 				styles={css`
 					margin-top: 40px;
+					align-items: center;
+					display: flex;
 				`}
 				disabled={isFetching || !rating || !comment}
 				onClick={() => {

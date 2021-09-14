@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+
+import { Loader } from '../../common/components';
 import { getCookie, setCookie } from '../../common/cookie';
 import styled, { css } from 'styled-components';
 import Rating from './Rating';
@@ -166,9 +168,10 @@ function ProductItem(props) {
 						min-width: 600px;
 
 						@media (max-width: 768px) {
-							min-width: 100%;
-							top: 0;
-							bottom: 0;
+							min-width: 90%;
+
+							bottom: 40px;
+
 							padding-top: 120px;
 						}
 					`}
@@ -188,6 +191,7 @@ function ProductItem(props) {
 								payload,
 								callback: () => {
 									getProducts();
+									setShowReviewModal(false);
 								},
 							});
 						}}

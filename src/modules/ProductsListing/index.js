@@ -6,8 +6,7 @@ import { useProducts } from './api';
 import PropTypes from 'prop-types';
 
 export const ProductSectionContainer = styled.div`
-	max-width: 1024px;
-	background: red;
+	max-width: 900px;
 	padding: 20px 100px;
 
 	margin: 0px auto;
@@ -16,6 +15,7 @@ export const ProductSectionContainer = styled.div`
 	margin-top: 100px;
 	@media (max-width: 768px) {
 		padding: 20px 10px;
+		width: 90%;
 	}
 `;
 
