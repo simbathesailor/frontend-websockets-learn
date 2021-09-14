@@ -1,8 +1,8 @@
-# Websockets Learn 🔌 🔌
+# Websockets Learn 📣
 
 A sample App to learn websockets
 
-## Available Scripts
+## Available Scripts 🔌
 
 In the project directory, you can run:
 
