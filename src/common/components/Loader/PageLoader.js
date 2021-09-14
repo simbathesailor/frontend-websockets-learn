@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 export const PageLoaderContainer = styled.svg`
 	transform: scale(1.5);
+	position: fixed;
+	top: 50vh;
+	transform: translate(-50%) scale(1.5);
 `;
 
 function PageLoader(props) {

@@ -61,19 +61,13 @@ function ProductListing(props) {
 	return (
 		<ProductSectionContainer>
 			{stateProducts?.isFetching ? <PageLoader /> : null}
-			{stateProducts?.isFetched ? (
-				<ProductListContainer>
-					{products.map(product => {
-						return (
-							<ProductItem
-								key={product.id}
-								item={product}
-								getProducts={getProducts}
-							/>
-						);
-					})}
-				</ProductListContainer>
-			) : null}
+			<ProductListContainer>
+				{products.map(product => {
+					return (
+						<ProductItem key={product.id} item={product} getProducts={getProducts} />
+					);
+				})}
+			</ProductListContainer>
 		</ProductSectionContainer>
 	);
 }

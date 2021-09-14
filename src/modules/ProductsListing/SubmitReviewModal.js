@@ -68,8 +68,8 @@ function SubmitReviewModal(props) {
 
 				<ReviewBox
 					value={comment}
-					onChange={e => {
-						setComment(e.target.value.trim());
+					onInput={e => {
+						setComment(e.target.value);
 					}}
 					placeholder="Enter your review"
 				/>
@@ -92,7 +92,7 @@ function SubmitReviewModal(props) {
 							payload: {
 								'product_id': item.id,
 								rating,
-								'review_comment': comment,
+								'review_comment': comment?.trim() || '',
 							},
 						});
 					}
