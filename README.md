@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Websockets Learn 🔌 🔌
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A sample App to learn websockets
 
 ## Available Scripts
 
@@ -68,10 +68,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-
-
-
-Rating css and design
-
-https://codepen.io/anefzaoui/pen/NWPZzMa
